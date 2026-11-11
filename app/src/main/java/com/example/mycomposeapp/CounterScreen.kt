@@ -19,9 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,11 +27,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mycomposeapp.ui.theme.MyComposeAppTheme
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun CounterScreen(modifier: Modifier = Modifier) {
-    var counter by rememberSaveable() { mutableIntStateOf(0) }
+fun CounterApp(
+    modifier: Modifier = Modifier,
+    viewModel: CounterViewModel = viewModel()
+) {
+    val counter by viewModel.counter
+    CounterScreen(
+        counter = counter,
+        onIncrement = { viewModel.increment() },
+        onDecrement = { viewModel.decrement() },
+        onReset = { viewModel.reset() },
+        modifier = modifier
+    )
+}
+@Composable
+fun CounterScreen(
+    counter: Int,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
+    onReset: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -42,20 +60,33 @@ fun CounterScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Counter App", fontSize = 24.sp, fontWeight = FontWeight.Bold
+            text = "Counter App",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
         CounterDisplay(
             value = counter,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
+            modifier = Modifier.fillMaxWidth().weight(1f)
         )
         Spacer(modifier = Modifier.height(16.dp))
         CounterButtons(
-            onDecrement = { counter-- },
-            onIncrement = { counter++ },
-            onReset = { counter = 0 })
+            onDecrement = onDecrement,
+            onIncrement = onIncrement,
+            onReset = onReset
+        )
+    }
+}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun CounterScreenPreview() {
+    MyComposeAppTheme() {
+        CounterScreen(
+            counter = 7,
+            onIncrement = {},
+            onDecrement = {},
+            onReset = {}
+        )
     }
 }
 
