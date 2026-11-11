@@ -30,18 +30,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mycomposeapp.ui.theme.MyComposeAppTheme
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun CounterApp(
     modifier: Modifier = Modifier,
+    onNavigate: () -> Unit,
     viewModel: CounterViewModel = viewModel()
 ) {
+
     val counter by viewModel.counter
+
     CounterScreen(
         counter = counter,
         onIncrement = { viewModel.increment() },
         onDecrement = { viewModel.decrement() },
         onReset = { viewModel.reset() },
+        onNavigate = onNavigate,
         modifier = modifier
     )
 }
@@ -51,6 +54,7 @@ fun CounterScreen(
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
     onReset: () -> Unit,
+    onNavigate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -73,7 +77,8 @@ fun CounterScreen(
         CounterButtons(
             onDecrement = onDecrement,
             onIncrement = onIncrement,
-            onReset = onReset
+            onReset = onReset,
+            onNavigate = onNavigate
         )
     }
 }
@@ -85,7 +90,8 @@ fun CounterScreenPreview() {
             counter = 7,
             onIncrement = {},
             onDecrement = {},
-            onReset = {}
+            onReset = {},
+            onNavigate = {}
         )
     }
 }
@@ -115,7 +121,10 @@ fun CounterDisplay(value: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun CounterButtons(
-    onDecrement: () -> Unit = {}, onIncrement: () -> Unit = {}, onReset: () -> Unit = {}
+    onDecrement: () -> Unit = {},
+    onIncrement: () -> Unit = {},
+    onReset: () -> Unit = {},
+    onNavigate: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -170,5 +179,22 @@ fun CounterButtons(
             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
             Text("RESET")
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onNavigate,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF9A9A9A)
+            )
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_person),
+                contentDescription = null,
+                modifier = Modifier.size(ButtonDefaults.IconSize)
+            )
+            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+            Text("ABOUT ME")
+        }
+        Spacer(modifier = Modifier.height(4.dp))
     }
 }
