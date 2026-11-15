@@ -1,23 +1,51 @@
 package com.example.mycomposeapp
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mycomposeapp.ui.theme.MyComposeAppTheme
 
 @Composable
-fun MyDataScreen(
+fun MyDataApp(
     viewModel: MyDataViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    MyDataScreen(
+        uiState = uiState,
+        onNameChange = { viewModel.onNameChange(it) },
+        onAgeChange = { viewModel.onAgeChange(it) }
+    )
+}
+
+@Composable
+fun MyDataScreen(
+    uiState: MyData,
+    onNameChange: (String) -> Unit,
+    onAgeChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -30,7 +58,7 @@ fun MyDataScreen(
 
         OutlinedTextField(
             value = uiState.name,
-            onValueChange = { viewModel.onNameChange(it) },
+            onValueChange = onNameChange,
             label = { Text("Masukkan Nama") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -38,7 +66,7 @@ fun MyDataScreen(
 
         OutlinedTextField(
             value = uiState.age,
-            onValueChange = { viewModel.onAgeChange(it) },
+            onValueChange = onAgeChange,
             label = { Text("Masukkan Umur") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
@@ -59,5 +87,17 @@ fun MyDataScreen(
                 style = MaterialTheme.typography.bodyLarge
             )
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun MyDataScreenPreview() {
+    MyComposeAppTheme {
+        MyDataScreen(
+            uiState = MyData(name = "Atalariq Barra Hadinugraha", age = "20"),
+            onNameChange = {},
+            onAgeChange = {}
+        )
     }
 }
