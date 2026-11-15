@@ -188,13 +188,12 @@ fun CounterButtons(
             )
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_arrow_forward),
+                painter = painterResource(R.drawable.ic_person),
                 contentDescription = null,
                 modifier = Modifier.size(ButtonDefaults.IconSize)
             )
             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-            Text("NEXT")
+            Text("ABOUT ME")
         }
-        Spacer(modifier = Modifier.height(4.dp))
     }
 }

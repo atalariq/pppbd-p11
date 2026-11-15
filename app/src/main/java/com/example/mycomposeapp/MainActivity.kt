@@ -28,7 +28,7 @@ fun AppNavigation() {
             })
         }
         composable("my_data_screen") {
-            MyDataApp()
+            MyDataApp(onBack = { navController.popBackStack() })
         }
     }
 }
